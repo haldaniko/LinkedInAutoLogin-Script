@@ -1,4 +1,5 @@
 import os
+import logging
 from dotenv import load_dotenv
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -6,6 +7,14 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
+logging.basicConfig(
+    filename="out.log",
+    level=logging.INFO,
+    format="%(asctime)s - %(levelname)s - %(message)s",
+    encoding="utf-8"
+)
+logger = logging.getLogger()
 
 load_dotenv()
 
@@ -27,8 +36,9 @@ class LinkedInParser:
         self.driver = webdriver.Chrome(options=options)
 
         if self.login_page():
-            print("Авторизація успішна.")
+            logger.info(f"Username: {username}. Авторизація успішна.")
         else:
+            logger.error("Не вдалось авторизуватись.")
             self.driver.quit()
             raise Exception("Не вдалось авторизуватись.")
 
@@ -50,9 +60,10 @@ class LinkedInParser:
             WebDriverWait(self.driver, 10).until(
                 EC.presence_of_element_located((By.ID, "global-nav"))
             )
+            logger.info("Успішний вхід у систему.")
             return True
         except Exception as e:
-            print(f"Помилка авторизації: {e}")
+            logger.error(f"Помилка авторизації: {e}")
             return False
 
     def get_profile_image(self) -> str:
@@ -67,19 +78,24 @@ class LinkedInParser:
             )
 
             img_url = img_element.get_attribute("src")
+            logger.info("Зображення профілю отримано.")
             return img_url
         except Exception as e:
+            logger.error(f"Помилка при отриманні зображення профілю: {e}")
             raise Exception(f"Помилка при отриманні зображення профілю: {e}")
 
     def close(self):
+        logger.info("Закриваємо браузер.")
         self.driver.quit()
 
 
 try:
     parser = LinkedInParser(username, password)
     profile_image_url = parser.get_profile_image()
+    logger.info(f"URL зображженя профілю: {profile_image_url}")
     print(f"URL зображженя профілю: {profile_image_url}")
 except Exception as e:
+    logger.error(f"Помилка: {e}")
     print(f"Помилка: {e}")
 finally:
     if 'parser' in locals():
