@@ -59,7 +59,6 @@ class LinkedInParser:
             WebDriverWait(self.driver, 10).until(
                 EC.presence_of_element_located((By.ID, "global-nav"))
             )
-            logger.info("Успішний вхід у систему.")
             return True
         except Exception as e:
             logger.error(f"Помилка авторизації: {e}")
