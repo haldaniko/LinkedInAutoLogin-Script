@@ -7,7 +7,6 @@ This project is a simple Python script that logs into LinkedIn using your creden
 - **Login to LinkedIn**: Automates the login process with your LinkedIn credentials.
 - **Retrieve Profile Image URL**: Fetches the URL of your LinkedIn profile image.
 - **Logging**: All actions and steps are logged in an `out.log` file to track the execution process.
-- **Headless Browser**: The script uses Selenium in headless mode to avoid opening a visible browser window.
 
 ### Installation
 ```
